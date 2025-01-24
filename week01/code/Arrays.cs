@@ -12,18 +12,23 @@ public static class Arrays
         // Remember: Using comments in your program, write down your process for solving this problem
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
+         
 
+        // PLAN
         // Step 1: Create an array of size 'length' to store the results.
+        // Step 2: Use a loop to calculate multiples of 'number'.
+        // Step 3: Return the array.
+
+
         double[] result = new double[length];
 
-        // Step 2: Use a loop to calculate multiples of 'number'.
         for (int i = 0; i < length; i++)
         {
             // Each element is the number multiplied by (index + 1).
             result[i] = number * (i + 1);
         }
 
-        // Step 3: Return the array.
+        
         return result;
     }
 
@@ -41,21 +46,24 @@ public static class Arrays
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
 
+        ///PLAN
         // Step 1: Handle edge cases where no rotation is needed.
+        // Step 2: Normalize the amount to ensure it doesn't exceed the list size.
+        // Step 3: Use a combination of slicing and concatenation to rotate the list.
+            // - Take the last 'rotateBy' elements.
+            // - Take the remaining elements from the beginning.
+            // - Combine them in the correct order.
+        // Step 4: Clear the original list and update it with the new order.
+
         if (data == null || data.Count <= 1 || amount % data.Count == 0)
             return;
 
-        // Step 2: Normalize the amount to ensure it doesn't exceed the list size.
+     
         int rotateBy = amount % data.Count;
 
-        // Step 3: Use a combination of slicing and concatenation to rotate the list.
-        // - Take the last 'rotateBy' elements.
-        // - Take the remaining elements from the beginning.
-        // - Combine them in the correct order.
         List<int> rotatedPart = data.GetRange(data.Count - rotateBy, rotateBy);
         List<int> remainingPart = data.GetRange(0, data.Count - rotateBy);
 
-        // Step 4: Clear the original list and update it with the new order.
         data.Clear();
         data.AddRange(rotatedPart);
         data.AddRange(remainingPart);
