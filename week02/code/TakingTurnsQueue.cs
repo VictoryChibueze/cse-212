@@ -7,17 +7,21 @@
 /// less than they will stay in the queue forever.  If a person is out of turns then they will 
 /// not be added back into the queue.
 /// </summary>
+
 public class TakingTurnsQueue
 {
-    private readonly PersonQueue _people = new();
-
-    public int Length => _people.Length;
+    private readonly Queue<Person> _people = new();
 
     /// <summary>
-    /// Add new people to the queue with a name and number of turns
+    /// Gets the number of people currently in the queue.
     /// </summary>
-    /// <param name="name">Name of the person</param>
-    /// <param name="turns">Number of turns remaining</param>
+    public int Length => _people.Count;
+
+    /// <summary>
+    /// Add a new person to the queue with a name and number of turns.
+    /// </summary>
+    /// <param name="name">The name of the person.</param>
+    /// <param name="turns">The number of turns the person has (0 or less for infinite turns).</param>
     public void AddPerson(string name, int turns)
     {
         var person = new Person(name, turns);
@@ -25,33 +29,35 @@ public class TakingTurnsQueue
     }
 
     /// <summary>
-    /// Get the next person in the queue and return them. The person should
-    /// go to the back of the queue again unless the turns variable shows that they 
-    /// have no more turns left.  Note that a turns value of 0 or less means the 
-    /// person has an infinite number of turns.  An error exception is thrown 
-    /// if the queue is empty.
+    /// Get the next person in the queue and return them. If the person has
+    /// remaining turns or infinite turns, they are re-added to the back of the queue.
+    /// If the queue is empty, an exception is thrown.
     /// </summary>
+    /// <returns>The next person in the queue.</returns>
     public Person GetNextPerson()
     {
-        if (_people.IsEmpty())
+        if (_people.Count == 0)
         {
             throw new InvalidOperationException("No one in the queue.");
         }
-        else
-        {
-            Person person = _people.Dequeue();
-            if (person.Turns > 1)
-            {
-                person.Turns -= 1;
-                _people.Enqueue(person);
-            }
 
-            return person;
+        var person = _people.Dequeue();
+
+        // Re-add to the queue if the person has remaining or infinite turns.
+        if (person.Turns <= 0 || person.Turns > 1)
+        {
+            if (person.Turns > 0)
+            {
+                person.Turns--; // Decrease finite turns
+            }
+            _people.Enqueue(person);
         }
+
+        return person;
     }
 
     public override string ToString()
     {
-        return _people.ToString();
+        return string.Join(", ", _people.Select(p => $"{p.Name} ({(p.Turns <= 0 ? "∞" : p.Turns.ToString())})"));
     }
 }
