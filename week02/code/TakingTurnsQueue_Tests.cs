@@ -11,7 +11,11 @@ public class TakingTurnsQueueTests
     // Scenario: Create a queue with the following people and turns: Bob (2), Tim (5), Sue (3) and
     // run until the queue is empty
     // Expected Result: Bob, Tim, Sue, Bob, Tim, Sue, Tim, Sue, Tim, Tim
-    // Defect(s) Found: 
+    // Defect(s) Found: Sequence starts with Sue instead of Bob
+        //The initial order of elements in the queue is incorrect.
+        // It appears that Sue is being processed before Bob and Tim.
+
+    // FIX:Ensure that players are dequeued and re-enqueued in the correct order based on their initial positions and remaining turns.
     public void TestTakingTurnsQueue_FiniteRepetition()
     {
         var bob = new Person("Bob", 2);
@@ -43,7 +47,12 @@ public class TakingTurnsQueueTests
     // Scenario: Create a queue with the following people and turns: Bob (2), Tim (5), Sue (3)
     // After running 5 times, add George with 3 turns.  Run until the queue is empty.
     // Expected Result: Bob, Tim, Sue, Bob, Tim, Sue, Tim, George, Sue, Tim, George, Tim, George
-    // Defect(s) Found: 
+    // Defect(s) Found: Sequence starts with Sue instead of Bob
+            //The logic for handling the addition of a new player during runtime disrupts the queue order.
+            //Existing players might be skipped or improperly reordered.
+
+   // FIX: Implement logic to correctly enqueue a new player without altering the order or behavior of the existing queue.
+
     public void TestTakingTurnsQueue_AddPlayerMidway()
     {
         var bob = new Person("Bob", 2);
@@ -85,7 +94,10 @@ public class TakingTurnsQueueTests
     // Scenario: Create a queue with the following people and turns: Bob (2), Tim (Forever), Sue (3)
     // Run 10 times.
     // Expected Result: Bob, Tim, Sue, Bob, Tim, Sue, Tim, Sue, Tim, Tim
-    // Defect(s) Found: 
+    // Defect(s) Found: Sequence starts with Sue instead of Bob
+        // The handling of "infinite" turns (0 or a large number) is not implemented correctly.
+        // Tim, who has infinite turns, is either being skipped or not prioritized as expected.
+    // FIX: Ensure players with infinite turns (0 or negative values) remain in the queue and are re-enqueued immediately after every turn.
     public void TestTakingTurnsQueue_ForeverZero()
     {
         var timTurns = 0;
@@ -116,7 +128,11 @@ public class TakingTurnsQueueTests
     // Scenario: Create a queue with the following people and turns: Tim (Forever), Sue (3)
     // Run 10 times.
     // Expected Result: Tim, Sue, Tim, Sue, Tim, Sue, Tim, Tim, Tim, Tim
-    // Defect(s) Found: 
+    // Defect(s) Found:  Sequence starts with Sue, and Tim does not behave as an infinite-turn player.
+         //Negative values for turns (-3) are not being treated as "infinite." 
+         //Instead, they might be processed as finite values, causing Tim to eventually disappear from the queue.
+    //FIX: Properly handle negative turn values as "infinite."Ensure the infinite player (Tim) stays in the queue and is re-enqueued without turn decrement.
+
     public void TestTakingTurnsQueue_ForeverNegative()
     {
         var timTurns = -3;
@@ -143,7 +159,7 @@ public class TakingTurnsQueueTests
     [TestMethod]
     // Scenario: Try to get the next person from an empty queue
     // Expected Result: Exception should be thrown with appropriate error message.
-    // Defect(s) Found: 
+    // Defect(s) Found: Passes (no error here).
     public void TestTakingTurnsQueue_Empty()
     {
         var players = new TakingTurnsQueue();
