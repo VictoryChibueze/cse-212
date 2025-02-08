@@ -174,11 +174,13 @@ public static decimal CountWaysToClimb(int s, Dictionary<int, decimal>? remember
         if (maze.IsEnd(x,y))
         {
             results.Add(currPath.AsString());
+            
             currPath.RemoveAt(currPath.Count-1);
             return;
         }
 
         SolveMaze(results, maze, x+1, y, currPath);
+
         SolveMaze(results, maze, x-1, y, currPath);
         SolveMaze(results, maze, x, y+1, currPath);
         SolveMaze(results, maze, x, y-1, currPath);
